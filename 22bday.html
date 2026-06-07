@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, May!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Special+Elite&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1a0f00;
+            background-image: 
+                radial-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.9) 100%),
+                linear-gradient(90deg, #2c1a04 25%, transparent 25%), 
+                linear-gradient(180deg, #2c1a04 25%, transparent 25%);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 40px 20px;
+        }
+
+        /* Interactive Click Wrapper to bypass browser audio blocks */
+        .start-wrapper {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+            background: #b8860b;
+            color: #1a0f00;
+            font-family: 'Special Elite', serif;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 4px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            border: 2px solid #ffd700;
+            animation: pulse 2s infinite;
+        }
+
+        .start-wrapper.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.9);
+        }
+
+        /* Main Scroll Shell */
+        .scroll-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .scroll-container.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Rigid Handles */
+        .scroll-roller {
+            width: 105%;
+            height: 25px;
+            background: linear-gradient(to bottom, #4a2c00, #804c00, #4a2c00);
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            z-index: 3;
+            position: relative;
+        }
+
+        .scroll-roller::before, .scroll-roller::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            width: 15px;
+            height: 35px;
+            background: radial-gradient(circle, #ffd700, #b8860b, #5f4b1d);
+            border-radius: 3px;
+        }
+        .scroll-roller::before { left: -10px; }
+        .scroll-roller::after { right: -10px; }
+
+        /* Highly-optimized Unrolling Canvas */
+        .scroll-paper {
+            width: 100%;
+            background: #f2e3c6;
+            background-image: 
+                radial-gradient(circle at 50% 50%, transparent 60%, rgba(215, 185, 130, 0.3) 100%),
+                linear-gradient(to right, rgba(0,0,0,0.15) 0%, transparent 5%, transparent 95%, rgba(0,0,0,0.15) 100%);
+            box-shadow: inset 0 0 50px rgba(139, 90, 43, 0.5), 0 10px 30px rgba(0,0,0,0.5);
+            
+            /* Hardware acceleration rules for optimal smoothness */
+            height: 0;
+            overflow: hidden;
+            transform-origin: top center;
+            transform: scaleY(0);
+            z-index: 2;
+            border-left: 2px solid #dcd0b4;
+            border-right: 2px solid #dcd0b4;
+            will-change: transform, height;
+        }
+
+        /* Dynamic Unroll Trigger Class called via JavaScript */
+        .scroll-paper.unroll-animation {
+            animation: smoothUnroll 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* Letter Styling */
+        .letter-content {
+            padding: 50px 40px;
+            color: #3d2605;
+            font-family: 'Special Elite', serif;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+            opacity: 0;
+            text-align: justify;
+            white-space: pre-line;
+        }
+
+        .letter-content.fade-in-text {
+            animation: smoothTextIn 1.2s ease-out forwards;
+            animation-delay: 1.5s;
+        }
+
+        .letter-content::first-line {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            line-height: 1.2;
+        }
+
+        .signature-block {
+            display: block;
+            text-align: right;
+            margin-top: 25px;
+            padding-right: 20px;
+        }
+
+        /* Performance keyframes utilizing scale transforms instead of raw layout calculation updates */
+        @keyframes smoothUnroll {
+            0% {
+                transform: scaleY(0);
+                height: 0;
+            }
+            100% {
+                transform: scaleY(1);
+                height: var(--full-height);
+            }
+        }
+
+        @keyframes smoothTextIn {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+            50% { transform: scale(1.03); box-shadow: 0 15px 25px rgba(184,134,11,0.4); }
+            100% { transform: scale(1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Prompt Overlay Button -->
+    <div class="start-wrapper" id="startButton">
+        📜 Tap to Open
+    </div>
+
+    <!-- Main Container -->
+    <div class="scroll-container" id="scrollContainer">
+        <div class="scroll-roller"></div>
+        
+        <div class="scroll-paper" id="scrollPaper">
+            <div class="letter-content" id="letterContent">Dear May,
+
+Happiest Birthday, my love! It's your day today! (pati si ate anne) WOOOOOO! I just want to say that for the past year, my day-to-day experiences with you have been momentous. I find myself looking forward to each day, wondering "what's gonna happen this time?" Throughout the time that we've known each other, I've learnt a lot of things about you—things you get mad at, your wants, needs, preferences, and many other exclusive attributes you have. But probably the most important attribute would be the way you want to be loved by someone, and the way you love that someone, that being me. I am very thankful to you as you've always been my partner-in-crime, and my No.1 supporter in everything that I do. I am also thankful to the ones up above for giving me the privilege of being with a person like you as you make me whole. I feel glad that I got to be a part of another one of your birthdays as it means that a whole year has already gone by since we got to know each other-it feels crazy! 
+
+To cut things a little shorter as I might go on forever with so many things to say, I want to give you these gifts that I have curated for you in celebration of your birthday! Now, I do not want to spoil anything for you since I have no idea if you'll read the letter first or go through the bag already. But all I can say is, I do hope you enjoy and use them well. 
+
+Lastly, I just want to thank you for always choosing to be with me throughout everything. I love you very much and I cherish you deeply. I wish that everything you want to achieve in life, would be achieved eventually (kasama aq dito) within due time, and to more birthdays to come! Happy Birthday, May! I love you very much.
+
+<span class="signature-block">Sincerely,
+Siegfrid</span></div>
+        </div>
+        
+        <div class="scroll-roller"></div>
+    </div>
+
+    <!-- Hidden High-Quality Sound Effect Asset -->
+    <audio id="scrollSound" src="https://assets.mixkit.co/active_storage/sfx/2384/2384-84.wav" preload="auto"></audio>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const scrollContainer = document.getElementById('scrollContainer');
+        const scrollPaper = document.getElementById('scrollPaper');
+        const letterContent = document.getElementById('letterContent');
+        const scrollSound = document.getElementById('scrollSound');
+
+        startButton.addEventListener('click', () => {
+            // Hide intro action button cleanly
+            startButton.classList.add('hidden');
+            
+            // Render basic layout visibility frames
+            scrollContainer.classList.add('active');
+            
+            // Set up audio parameters & play immediately on interaction confirmation
+            scrollSound.currentTime = 0;
+            scrollSound.volume = 0.8; // Generous balance
+            scrollSound.play().catch(err => console.log("Audio play blocked: ", err));
+
+            // Dynamic calculation properties prevent frame drops or stutter adjustments
+            const targetHeight = letterContent.scrollHeight + 'px';
+            scrollPaper.style.setProperty('--full-height', targetHeight);
+            
+            // Fire layout transition tracks
+            scrollPaper.classList.add('unroll-animation');
+            letterContent.classList.add('fade-in-text');
+        });
+    </script>
+</body>
+</html>
